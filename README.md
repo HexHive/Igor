@@ -22,7 +22,7 @@ Igor helps a lot when you have many PoCs and would like to classify them into
 several groups according to the root cause, so that you don't need to analyze
 the PoCs one by one. 
 
-[Here](https://github.com/HexHive/QuickTest/tree/main/images/Igor_overview.pdf)
+[Here](https://github.com/HexHive/Igor/tree/main/images/Igor_overview.pdf)
 is a flow chart for overviewing the Igor's workflow.
 
 More details about the project can be found at the [paper]().
