@@ -149,7 +149,7 @@ and further expanded the scale of the data set on their basis (more fuzzing time
 to generate more crashes).
 
 Here are the links to our ground-truth benchmark:  
-[benchmark](https://github.com/HexHive/Igor/tree/main/data)  
+[benchmark](https://drive.google.com/drive/folders/1LgkVh1GpFMyIQ7kJSA-oYj-mr7S99edi?usp=sharing)  
 Every PoC is labeled with its root cause, user can get the label by parse the name of the PoC.
 
 Building Magma targets approach can be found [here](https://hexhive.epfl.ch/magma/docs/getting-started.html)  
