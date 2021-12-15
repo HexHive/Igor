@@ -25,7 +25,9 @@ the PoCs one by one.
 [Here](https://github.com/HexHive/Igor/tree/main/images/Igor_overview.pdf)
 is a flow chart for overviewing the Igor's workflow.
 
-More details about the project can be found at the [paper]().
+More details about the project can be found at the [paper](https://hexhive.epfl.ch/publications/files/21CCS.pdf).
+
+Our presentation about Igor can be found at the [video](https://www.youtube.com/watch?v=V06x1Ad5dRo)
 
 
 ## Components
@@ -147,11 +149,18 @@ and further expanded the scale of the data set on their basis (more fuzzing time
 to generate more crashes).
 
 Here are the links to our ground-truth benchmark:  
-[benchmark]()
+[benchmark](https://github.com/HexHive/Igor/tree/main/data)  
+Every PoC is labeled with its root cause, user can get the label by parse the name of the PoC.
+
+Building Magma targets approach can be found [here](https://hexhive.epfl.ch/magma/docs/getting-started.html)  
+Building MoonLight targets approach can be found [here](https://datacommons.anu.edu.au/DataCommons/rest/records/anudc:5927/data/Binaries/)
+
+## Contact
+Questions? Concerns? Feel free to ping me via [E-mail](supermolejzy@gmail.com)
 
 ## TODO
 - ~~Provide evaluation scripts we used in Igor paper~~
-- Provide link to Igor's dataset
+- ~~Provide link to Igor's dataset~~
 - Provide detailed tutorial for Igor system
 - Provide README for evaluation scripts
 - Provide scripts to do trace analyzing stuff automaticlly
