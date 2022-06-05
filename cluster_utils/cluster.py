@@ -132,6 +132,8 @@ class ClusterWrapper:
         self._similarity_mat = similarity_mat
         dist_mat = 1 - similarity_mat
         max_silhouette_score = -math.inf
+        this_sc = -math.inf
+        last_sc = -math.inf
         predicted_cluster = None
         continuous_decrease_cnt = 0
 
@@ -142,14 +144,17 @@ class ClusterWrapper:
 
             # Get clustering result and calculate the corresponding silhouette score.
             predicted = clustering.labels_
-            sc = metrics.silhouette_score(dist_mat, predicted, metric='precomputed')
+            this_sc = metrics.silhouette_score(dist_mat, predicted, metric='precomputed')
 
-            # If a larger `n_clusters` leads to the same silhouette score as the smaller one,
-            # we prefer the smaller `n_clusters`.
-            if sc > max_silhouette_score:
-                max_silhouette_score = sc
-                predicted_cluster = predicted
+            # If the score in current round larger than previous round,
+            # we should reset the counter of decrease first
+            if this_sc >= last_sc:
                 continuous_decrease_cnt = 0
+                # If a larger `n_clusters` leads to the same silhouette score as the smaller one,
+                # we prefer the smaller `n_clusters`.
+                if this_sc > max_silhouette_score:
+                    max_silhouette_score = this_sc
+                    predicted_cluster = predicted
             else:
                 continuous_decrease_cnt += 1
 
@@ -157,6 +162,9 @@ class ClusterWrapper:
             # result(`predicted_cluster`).
             if continuous_decrease_cnt == 2:
                 return predicted_cluster
+
+            # Save the score in current round
+            last_sc = this_sc
         return predicted_cluster
 
     def clustering(self):
