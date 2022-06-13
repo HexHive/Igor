@@ -2,7 +2,6 @@ import typing
 import numpy
 import networkx
 import grakel
-import DCFG
 
 class GKA:
     """ Base class for GKA (Graph Kernel Algorithm)

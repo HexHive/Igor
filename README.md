@@ -163,4 +163,4 @@ Questions? Concerns? Feel free to ping me via [E-mail](supermolejzy@gmail.com)
 - ~~Provide link to Igor's dataset~~
 - Provide detailed tutorial for Igor system
 - Provide README for evaluation scripts
-- Provide scripts to do trace analyzing stuff automaticlly
+- ~~Provide scripts to do trace analyzing stuff automaticlly~~
