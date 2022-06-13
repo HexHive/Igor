@@ -1,12 +1,9 @@
-from logging import root
 import os
 import typing
-import igraph
 import networkx
-import graphviz
 
 class DCFG:
-    """ Base class for DCFG 
+    """ Base class for DCFG (Dynamic Control-Flow Graph)
     """
     def __init__(self, trace :str) -> None:
         """ Init from a trace file
@@ -21,11 +18,11 @@ class DCFG:
         self._node_head = None
         self._node_tail = None
 
-        #Key: address (int rather than hex-str) as node unique identifier in NetworkX [int]
+        #Key: address (int rather than hex-str) for identifying a node [int]
         #Val: hit count [int]
         self._node_hit = {}
 
-        #Key: (node_id_front, node_id_next) as edge [tuple]
+        #Key: (node_id_front, node_id_next) for identifying a edge [tuple]
         #Val: hit count [int]
         self._edge_hit = {}
 
@@ -46,7 +43,7 @@ class DCFG:
         The dict:
             Key: Any hashable Python object which can be used as a key in a Python dictionary.
             Val: hit count (1 hit => counter+=1)
-        [Higher performance in dict-key-check](https://cloud.tencent.com/developer/article/1820102?ivk_sa=1024320u)
+        [Higher performance in dict-has-key-check](https://stackoverflow.com/questions/1323410/should-i-use-has-key-or-in-on-python-dicts)
         """
         if x in d:
             d[x] += 1
@@ -72,7 +69,7 @@ class DCFG:
             lastN = thisN
             self.set_hit_count(self._node_hit, lastN)
 
-    def is_dense(self) -> typing.Union[None,bool] :
+    def is_dense(self) -> typing.Optional[bool] :
         """ Determining whether the DCFG (i.e. `self.DCFG_RAW`) is sparse or dense
 
         `Borgwardt, Karsten, et al. "Graph kernels: State-of-the-art and future challenges." arXiv preprint arXiv:2011.03854 (2020).`
@@ -117,204 +114,6 @@ class DCFG_NX(DCFG):
         """
         return self.DCFG_RAW
 
-    def _return_ego_dcfg(self, NID :int, RAD :int, ALT :typing.Union[str,None]) -> networkx.DiGraph :
-        """ Provide DCFG in Ego graph.
-
-        1. WHAT IS `Ego Graph`
-        http://olizardo.bol.ucla.edu/classes/soc-111/lessons-winter-2022/5-lesson-egonet-metrics.html
-        Ego graphs are also referred to as centered graphs. Ego graphs are useful for 
-        representing egocentric networks. An ego graph is the graph of all nodes that 
-        are less than a certain distance from the center node.
-
-        2. Params
-            2.1 NID
-                Node Identifier for center node.
-                Center node will be included in ego graph.
-                Node, edge, and graph attributes are copied to the returned subgraph.
-            2.2 RAD
-                Include all neighbors of distance<=`RAD` from node `NID`.
-                Both in- and out-neighbors of directed graphs will be included.
-            2.3 ALT
-                Use specified edge data key as distance. For example, 
-                setting `ALT='weight'` will use the edge weight to 
-                measure the distance from the node `NID`.
-        """
-        return networkx.ego_graph(self.DCFG_RAW, NID, 
-                                  radius = RAD, 
-                                  center = True,
-                                  undirected = True,
-                                  distance = ALT)
-
-    def return_tail_ego_dcfg(self, RAD :int) -> networkx.DiGraph :
-        """ Provide DCFG in Ego graph with the tail of trace file as center.
-
-        A wrapper of return_ego_dcfg with `NID=self._node_tail`, `ALT=None`
-        """
-        return self._return_ego_dcfg(self._node_tail, RAD, None)
-    
-    def render_dcfg(self) -> None :
-        """ Render DCFG by methods from NetworkX. 
-
-        TODO: doc & implementation
-        # Goto prototype/test.ipynb for more...
-        """
-        pos_layout = \
-            networkx.nx_agraph.graphviz_layout(
-                self.DCFG_RAW,
-                prog = "fdp",
-                root = None
-            )
-
-
-class DCFG_GV(DCFG):
-    """ DCFG by Graphviz
-
-    https://graphviz.readthedocs.io/en/stable/api.html#api-reference
-    """
-    def construct_dcfg(self) -> None :
-        """ Construct DCFG with head and tail colored.
-        """
-        self.traverse_trace_file()
-        self.DCFG_RAW = graphviz.Digraph()
-
-        for vtx in self._node_hit:
-            self.DCFG_RAW.node(str(vtx), hit=str(self._node_hit[vtx]))
-
-        for edg in self._edge_hit:
-            self.DCFG_RAW.edge(str(edg[0]), str(edg[1]), label=str(self._edge_hit[edg]))
-
-        self.DCFG_RAW.node(str(self._node_head), color="green", style="filled", fillcolor="green")
-        self.DCFG_RAW.node(str(self._node_tail), color="red",   style="filled", fillcolor="red"  )
-    
-    def return_dcfg(self) -> graphviz.Digraph :
-        """ Provide DCFG for outside request.
-        """
-        return self.DCFG_RAW
-
-    def render_dcfg(self, suffix :str ="_GraphvizGen", dirname :str =None) -> None :
-        """ Render DCFG to png by engines from Graphviz. 
-
-        Irritatingly slow but attractively beautiful...
-
-        :param suffix: The suffix attached to the trace file
-        :param dir: (Sub)directory for graphviz file saving and rendering.
-                    Will place it alongside the trace file by default.
-        """
-        self.DCFG_RAW.render(filename  = self._trace_name + suffix,
-                             directory = dirname,
-                             cleanup = True, 
-                             format  = "png",
-                             engine  = "dot")
-
-
-class DCFG_IG(DCFG):
-    """ DCFG by igraph
-
-    https://igraph.org/python/api/latest/
-
-    This class can also be designed by inheriting `DCFG_NX`, 
-    but we do not do so to avoid the impact of 
-    `networkx.DiGraph` intermediates on system overhead.
-    """
-    def construct_dcfg(self) -> None :
-        """ Construct DCFG with 0 additional attribute for node and 1 for edge
-
-        In `igraph.Graph`, according to [this](https://igraph.org/python/api/latest/igraph.Graph.html#from_networkx), 
-        ids of vertices are from 0 up (as standard in igraph). And `igraph.Graph` does NOT provide any interface to
-        intervene in this ID-allocation-mode for its users in contrast to `NetworkX`. 
-
-        However, according to [this](https://igraph.org/python/api/latest/igraph.Graph.html#add_vertex), 
-        if a graph has `name` as a vertex attribute, it allows one to refer to vertices by their names 
-        in most places where igraph expects a vertex ID.
-
-        We do not add additional attribute `hit` for nodes to avoid the potential for 
-        multi-labels to interfere with the graph kernel methods, because
-        [BorgwardtLab/GraphKernels](https://github.com/BorgwardtLab/GraphKernels/tree/master/Tutorial)
-        indicates that kernel algorithms from here does not provide params for choosing which label 
-        to load in contrast to `GraKeL`.
-        """
-        self.traverse_trace_file()
-        self.DCFG_RAW = igraph.Graph(directed = True)
-
-        self._vtxs = [str(addr) for addr in self._node_hit]
-        self.DCFG_RAW.add_vertices(self._vtxs)
-
-        edgs = []
-        tags = {"hit":[]}
-        for edg in self._edge_hit:
-            edgs.append((str(edg[0]) , str(edg[1])))
-            tags["hit"].append(self._edge_hit[edg])
-        self.DCFG_RAW.add_edges(edgs, tags)
-
-    def return_dcfg(self) -> igraph.Graph :
-        """ Provide DCFG for outside request.
-        """
-        return self.DCFG_RAW
-
-    def _return_ego_dcfg(self, VID :int, RAD :int) -> igraph.Graph :
-        """ Provide DCFG in Ego graph.
-
-        ### WHAT IS `Ego Graph`
-
-        http://olizardo.bol.ucla.edu/classes/soc-111/lessons-winter-2022/5-lesson-egonet-metrics.html
-        Ego graphs are also referred to as centered graphs. Ego graphs are useful for 
-        representing egocentric networks. An ego graph is the graph of all nodes that 
-        are less than a certain distance from the center node.
-
-        ### Ways to create ego-graph in python-igraph
-
-        https://igraph-help.nongnu.narkive.com/xKp11GRa/igraph-things-about-ways-to-create-ego-graph-in-python-igraph
-        Using `graph.neighborhood()` with the appropriate parameterization, in
-        combination with `graph.induced_subgraph()`.
-            
-        ### Parameters
-            `VID`
-                Vertex ID for center vertex.
-                Center vertex will be included in ego graph.
-                All attributes are copied to the returned subgraph.
-            `RAD`
-                Include all neighbors of distance<=`RAD` from vertex `VID`.
-                Both in- and out-neighbors of directed graphs will be included.
-        """
-        #ids of vertices are from 0 up (as standard in igraph)
-        assert (VID in range(len(self._node_hit))) , "Invalid Vertex ID"
-        #https://igraph.org/python/api/latest/igraph._igraph.GraphBase.html#neighborhood
-        sub_vertices_lst = \
-            self.DCFG_RAW.neighborhood(
-                vertices = VID,
-                order = RAD,
-                mode = "all",
-                mindist = 0
-            )
-        #https://igraph.org/python/api/latest/igraph._igraph.GraphBase.html#induced_subgraph
-        return self.DCFG_RAW.induced_subgraph(sub_vertices_lst, implementation = "auto")
-
-    def _addr2vid(self, addr :int) -> int :
-        """ Get true vertex id in `self.DCFG_RAW`-an `igraph.Graph`, by vertex name-`str(addr)`
-        """
-        return self._vtxs.index(str(addr))
-
-    def return_tail_ego_dcfg(self, RAD :int) -> igraph.Graph :
-        """ Provide DCFG in Ego graph with the tail of trace file as center.
-
-        A wrapper of return_ego_dcfg with `VID=str(self._node_tail)`
-        """
-        return self._return_ego_dcfg(self._addr2vid(self._node_tail), RAD)
-    
-    def render_dcfg(self) -> None :
-        """ Render DCFG by methods from NetworkX. 
-
-        TODO: doc & implementation
-        """
-        #Output of the statement below looks very ugly...
-        igraph.plot(self.DCFG_RAW, "DCFG_RAW.svg", layout = self.DCFG_RAW.layout_lgl())
-
 
 if __name__ == "__main__":
-    dcfg_test = DCFG_IG(r"./prototype/testcase/AAH017_tif_dirwrite_c_2104_8ea_id:000143-sig:06-src:000005-op:flip1-pos:236_drw_concise")
-    dcfg_test.construct_dcfg()
-    G_all = dcfg_test.return_dcfg()
-    G_sub = dcfg_test.return_tail_ego_dcfg(3)
-    #https://igraph.org/python/api/latest/igraph.Graph.html#summary
-    print(G_all.summary(verbosity = 0, width = None))
-    print(G_sub.summary(verbosity = 0, width = None))
+    pass
