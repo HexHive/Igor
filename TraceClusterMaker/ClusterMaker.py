@@ -73,7 +73,7 @@ class MakeCluster:
         else:
             K = self._kernel()
         K.graph_lst = g_list
-
+        K.apply_WL_Subtree_Kernel()
         return K.get_matrix()
 
     def launcher(self) -> list :
