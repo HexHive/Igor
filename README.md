@@ -36,7 +36,7 @@ This repository is structured as follows:
 1. IgorFuzz (AFLplusplus): Our coverage decreasing fuzzer for test cases reduction.
 2. Smart_tracer (Pin): Our tracer to record control flow.
 3. Analyzer: Prune recorded execution traces and construct control flow graphs 
-4. Cluster: Our cluster tool based on graph similar matrixs
+4. TraceClusterMaker: Our cluster tool based on graph similar matrixs
 5. Evaluation: Our evaluation scripts used in Igor paper
 
 
@@ -122,16 +122,11 @@ be used to calculate the graph similarity. Follwing steps show how to do that.
 
 ## Clustering
 
-The `cluster_utils` folder contains the utilities for clustering.
+The `TraceClusterMaker` folder contains the utilities for clustering.
 
-`cluster_utils/cluster.py` will do everything for you, including construct
+`TraceClusterMaker/ClusterMaker.py` will do everything for you, including construct
 control flow graphs based on pruned traces, calculate graph similarities and
-clustering. A simple example is listed below:
-
-```console
-# '/traces/dir' is the pruned traces dir obtained by the "Tracing" work flow.
-$ python3 cluster.py -i /traces/dir -o /output/dir
-```
+clustering.
 
 ## Ground-truth Benchmark
 There are few public benchmark designed for the verification of crash grouping,
@@ -163,4 +158,4 @@ Questions? Concerns? Feel free to ping me via [E-mail](supermolejzy@gmail.com)
 - ~~Provide link to Igor's dataset~~
 - Provide detailed tutorial for Igor system
 - Provide README for evaluation scripts
-- ~~Provide scripts to do trace analyzing stuff automaticlly~~
+- Provide scripts to do trace analyzing stuff automaticlly
