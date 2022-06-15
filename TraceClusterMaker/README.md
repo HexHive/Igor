@@ -2,7 +2,6 @@
 
 `TraceClusterMaker` is a refactoring and enhancement of `cluster_utils` and the latter has been deprecated now. We make it more user-friendly oriented, add some new features, and decouple it for easier future extension.
 
-***
 ## Overview
 
 <img src="./overview.png" width=640/>
@@ -21,7 +20,6 @@ The traces found would be read and analysed one by one. Finally a report file wi
 
 - In our latest research, we have designed a new improvement scheme, which can effectively replace this fussy heuristic in some cases. We plan to merge the code into current branch in the future.
 
-***
 ## Components
 
 ### ✅ `DCFG.py`: Traces to DCFGs
@@ -30,7 +28,7 @@ According to [DCFG by Intel](https://www.intel.com/content/www/us/en/developer/a
 
 Class `DCFG` is base class which implements some common methods for parsing a trace file. Regardless of how the specific graph package uniquely identifies each node internally, we use integers which are decimal conversion of hexadecimal address in the trace to do this. The finally built Graph object will be stored in its attribute `DCFG_RAW`.
 
-Classes that implement concrete DCFG-build-methods will inherit `DCFG`. Each of them have methods `construct_dcfg` and `return_dcfg`. After creating an instance of `DCFG`, call `construct_dcfg` first to build and then call `return_dcfg` to receive the graph object.
+Classes that implement concrete DCFG-build-methods inherits `DCFG`. Each of them has methods `construct_dcfg` and `return_dcfg`. After creating an instance of `DCFG`, call `construct_dcfg` first to build and then call `return_dcfg` to receive the graph object.
 
 ### ✅ `GKA.py`: DCFGs to Similarity Matrix
 
@@ -68,7 +66,6 @@ cluster_tags = ["0", "1"]
 > The file content is a JSON Object. It has 3 keys in toplevel: `Result`, `Score` and `Outlier`(if exists). Value of `Result` is a JSON Object contains `<Cluster-ID str>`/`<JSON Array of trace-file-path str>` pairs. Value of `Score` is a JSON Object contains `<metric name>`/`float value` pairs. Value of `Outlier` is a JSON Array contains the path of those outliers.
 > We give an example of the report: `report_1655262593759_example.json`.
 
-***
 ## Dependencies
 
 This tool is written in *Python* and requires a minimum version of `3.6.9`. We highly recommend to use a virtual environment to install these dependencies via `pip`:
@@ -83,9 +80,8 @@ This tool is written in *Python* and requires a minimum version of `3.6.9`. We h
 
 - `grakel (>= 0.1.8)`
   
-***
 ## Usage
 
 ```console
-$ python3 ClusterMaker.py -i <traces dir> -o <output reports dir> --benchmark <regex matching ground-truth class string>  --outlier <outlier ratio value>
+$ python3 ClusterMaker.py -i "<traces dir>" -o "<output reports dir>" --benchmark "<regex matching ground-truth class string>"  --outlier "<outlier ratio value>"
 ```

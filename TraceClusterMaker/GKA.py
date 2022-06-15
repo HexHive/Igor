@@ -137,48 +137,6 @@ class GKA_GraKeL(GKA):
                 verbose = self._isVerbose,
                 n_jobs  = self._setJoblib
             ).fit_transform(self._graph_container)
-
-    def apply_Vertex_Histogram_Kernel(self) -> None :
-        """ Use Vertex Histogram Kernel to calculate the similarity matrix
-        [Tutorial](https://ysig.github.io/GraKeL/0.1a8/kernels/vertex_histogram.html)
-        [API Reference](https://ysig.github.io/GraKeL/0.1a8/generated/grakel.VertexHistogram.html#grakel.VertexHistogram)
-        """
-        pass
-
-    def apply_Edge_Histogram_Kernel(self) -> None :
-        """ Use Edge Histogram Kernel to calculate the similarity matrix
-        [Tutorial](https://ysig.github.io/GraKeL/0.1a8/kernels/edge_histogram.html)
-        [API Reference](https://ysig.github.io/GraKeL/0.1a8/generated/grakel.EdgeHistogram.html)
-        """
-        pass
-
-    def apply_Shortest_Path_Kernel(self) -> None :
-        """ Use Shortest Path Kernel to calculate the similarity matrix
-        [Tutorial](https://ysig.github.io/GraKeL/0.1a8/kernels/shortest_path.html)
-        [API Reference](https://ysig.github.io/GraKeL/0.1a8/generated/grakel.ShortestPath.html#grakel.ShortestPath)
-        """
-        pass
-
-    def apply_Random_Walk_Kernel(self) -> None :
-        """ Use Random Walk Kernel to calculate the similarity matrix
-        [Tutorial](https://ysig.github.io/GraKeL/0.1a8/kernels/random_walk.html)
-        [API Reference](https://ysig.github.io/GraKeL/0.1a8/generated/grakel.RandomWalkLabeled.html#grakel.RandomWalkLabeled)
-        """
-        pass
-
-    def apply_Multiscale_Laplacian_Kernel(self) -> None :
-        """ Use Multiscale Laplacian Kernel to calculate the similarity matrix
-        [Tutorial](https://ysig.github.io/GraKeL/0.1a8/kernels/multiscale_laplacian.html)
-        [API Reference](https://ysig.github.io/GraKeL/0.1a8/generated/grakel.MultiscaleLaplacian.html#grakel.MultiscaleLaplacian)
-        """
-        pass
-
-    def apply_Neighborhood_Subgraph_Pairwise_Distance_Kernel(self) -> None :
-        """ Use Neighborhood Subgraph Pairwise Distance Kernel to calculate the similarity matrix
-        [Tutorial](https://ysig.github.io/GraKeL/0.1a8/kernels/neighborhood_subgraph_pairwise_distance.html)
-        [API Reference](https://ysig.github.io/GraKeL/0.1a8/generated/grakel.NeighborhoodSubgraphPairwiseDistance.html#grakel.NeighborhoodSubgraphPairwiseDistance)
-        """
-        pass
     
     def apply_kernel_template(self) -> None :
         """ Use ? Kernel to calculate the similarity matrix
