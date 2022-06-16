@@ -151,7 +151,8 @@ Building Magma targets approach can be found [here](https://hexhive.epfl.ch/magm
 Building MoonLight targets approach can be found [here](https://datacommons.anu.edu.au/DataCommons/rest/records/anudc:5927/data/Binaries/)
 
 ## Contact
-Questions? Concerns? Feel free to ping me via [E-mail](supermolejzy@gmail.com)
+Questions? Concerns? Feel free to ping me via [E-mail](supermolejzy@gmail.com)  
+For recent update and new features implementation, please ping Sonic who is pushing this project forward via [E-mail](observer000@qq.com)
 
 ## TODO
 - ~~Provide evaluation scripts we used in Igor paper~~
