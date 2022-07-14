@@ -51,7 +51,7 @@ echo "we are launching!"
 PROCESS_NUM=$1
 for POC in $INPUTDIR/*
 do
-     if [$PROCESS_NUM -le 0]
+     if [ $PROCESS_NUM -le 0 ]
      then 
           break
      elif test -d $POC
