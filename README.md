@@ -143,8 +143,8 @@ used all their crashes and labels in the process of building the our benchmark,
 and further expanded the scale of the data set on their basis (more fuzzing time
 to generate more crashes).
 
-Here are the links to our ground-truth benchmark:  
-[benchmark](https://drive.google.com/drive/folders/1LgkVh1GpFMyIQ7kJSA-oYj-mr7S99edi?usp=sharing)  
+In our ground-truth benchmark, we used the PoCs from
+[PoCalypse](https://github.com/HexHive/PoCalypse).
 Every PoC is labeled with its root cause, user can get the label by parse the name of the PoC.
 
 Building Magma targets approach can be found [here](https://hexhive.epfl.ch/magma/docs/getting-started.html)  
@@ -160,3 +160,4 @@ For recent update and new features implementation, please ping Sonic who is push
 - Provide detailed tutorial for Igor system
 - Provide README for evaluation scripts
 - Provide scripts to do trace analyzing stuff automaticlly
+
